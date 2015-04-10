@@ -26,14 +26,14 @@ This can be compiled on the CSE machines with the makefile that is on Dr. Renka'
 #include <math.h>//for using cos, pow, sqrt
 
 //for axis rotations
-static GLint x_rotation = 0, y_rotation = 0;
+GLint x_rotation = 0, y_rotation = 0;
 
 //for projection zoom in/out
-static GLfloat x_center = 0.0, y_center = 0.0, scale = 0.5, radius = 1.0;
+ GLfloat x_center = 0.0, y_center = 0.0, scale = 0.5, radius = 1.0;
 //variables for bivariate function
-static int k = 60; //huge number of triangles. I want a smooth curve
-static int indv, indt, i, j, i1, i2, i3;
-static GLfloat h, x, y;
+int k = 60; //huge number of triangles. I want a smooth curve
+int indv, indt, i, j, i1, i2, i3;
+GLfloat h, x, y;
 //had to do math by hand since we are using arrays
 //NV = (k+1)^2, NT = 2k^2
 enum
@@ -44,10 +44,10 @@ enum
 
 
 //arrays we need for bivariate function
-static GLfloat v[NV][3];
-static unsigned int ltri[NT][3];
-static GLfloat vn[NV][3];
-static GLfloat tn[3];
+GLfloat v[NV][3];
+unsigned int ltri[NT][3];
+GLfloat vn[NV][3];
+GLfloat tn[3];
 
 //playing with lighting stuff. 
 GLfloat mat_ambient_color[] = { 1.0, 0.0, 0.0, 1.0 };
@@ -70,8 +70,6 @@ float f(float x, float y) //function defined in assignment
 
 void init(void) 
 {
-	
-	
 	//Get some red ambient light. Ends up roughly pinkish/purple
 	GLfloat ambient[] = { 1.0, 0.0, 0.0, 1.0 };
 	//using some specular light so we can see lighting when viewing back side
@@ -179,7 +177,6 @@ void display(void)
 	//NT*3 because 3 vertices per triangle
 	glDrawElements(GL_TRIANGLES, NT*3, GL_UNSIGNED_INT, ltri);
 	glPopMatrix();
-	
 	glPopMatrix();
 	
 	//since we're right multiplying we'll draw and then rotate
@@ -209,11 +206,11 @@ void reshape (int w, int h)
 	//left, right, bottom, top, near, far
 	//arbitrary near/far
 	glFrustum(x_center-scale*radius, x_center+scale*radius, y_center-scale*radius, y_center+scale*radius, 1, 7);
-
+	glTranslatef(0.0, 0.0, -4.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//translate a bit to center it. Arbitrary values
-	glTranslatef(0.0, 0.0, -4.0);
+	
 	
 }
 
