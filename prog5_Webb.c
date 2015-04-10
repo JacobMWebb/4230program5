@@ -10,6 +10,12 @@ This can be compiled on the CSE machines with the makefile that is on Dr. Renka'
 	This can be compiled on a Apple computer with the following pasted into terminal:
 
 	gcc prog5_Webb.c -L/System/Library/Frameworks -framework GLUT -framework OpenGL -w 
+
+	TO USE:***
+	x/X rotate x-axis
+	y/Y rotate y-axis
+	=/+ zoom in and out
+
 */
 
 #ifdef __APPLE__
@@ -64,13 +70,11 @@ float f(float x, float y) //function defined in assignment
 
 void init(void) 
 {
-	//just playing with lighting stuff. giving our mesh a reflecting color
 	
-	//Get some red ambient light. Ends up roughly pink
+	
+	//Get some red ambient light. Ends up roughly pinkish/purple
 	GLfloat ambient[] = { 1.0, 0.0, 0.0, 1.0 };
 	//using some specular light so we can see lighting when viewing back side
-	GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat position[] = { 0.0, 3.0, 2.0, 0.0 };
 	GLfloat model_ambient[] = { 0.1, 0.0, 1.0, 1.0 };
 	
 	glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -78,8 +82,7 @@ void init(void)
 	glShadeModel(GL_SMOOTH);
 	//ambient light magic
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	//specular light magic
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	
 	//tell opengl what kind of lighting we're using
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, model_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, model_ambient);
@@ -147,7 +150,7 @@ void init(void)
 		vn[i3][2] += tn[2];
 	}
 	//normalize all of our vertex normals
-	//just an fyi, if you don't do this the lighting is much too bright.
+	//just an fyi, if you don't do this the lighting is very bright.
 	for(indv = 0; indv < NV; indv++) 
 	{
 		normalize(vn[indv]);
@@ -169,13 +172,16 @@ void display(void)
 	//apply rotations to axes
 	glRotatef((GLfloat) x_rotation, 1.0, 0.0, 0.0);
 	glRotatef((GLfloat) y_rotation, 0.0, 1.0, 0.0);
+	glTranslatef(-0.5, -0.5, 0.0);
 	//push rotations
 	glPushMatrix();
 	//draw our vertex arrays
 	//NT*3 because 3 vertices per triangle
 	glDrawElements(GL_TRIANGLES, NT*3, GL_UNSIGNED_INT, ltri);
 	glPopMatrix();
+	
 	glPopMatrix();
+	
 	//since we're right multiplying we'll draw and then rotate
 	glutSwapBuffers();
 }
@@ -207,7 +213,8 @@ void reshape (int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//translate a bit to center it. Arbitrary values
-	glTranslatef(-0.5, -0.5, -4.0);
+	glTranslatef(0.0, 0.0, -4.0);
+	
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -292,7 +299,7 @@ void CreateMenu(void) {
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
    glutInitWindowSize(500, 500); 
    glutInitWindowPosition(100, 100);
    glutCreateWindow("Program 5 Webb, Jacob");
